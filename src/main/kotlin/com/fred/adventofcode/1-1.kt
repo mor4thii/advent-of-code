@@ -27,18 +27,17 @@ fun main() {
     println(foo)
 }
 
-private fun findElfCarryingMaximumCalories(input: String): Pair<Int, Int> {
+private fun findElfCarryingMaximumCalories(input: String): Int {
     var inventoryList = inventoryFrom(input)
-    val calories = mutableListOf<Int>()
+    val calories = mutableListOf<List<String>>()
 
     while (inventoryList.isNotEmpty()) {
         val inventoryEnd = findInventoryEnd(inventoryList)
-        calories.add(sumCaloriesOfNextElf(inventoryList, inventoryEnd))
+        calories.add(inventoryList.subList(0, inventoryEnd))
         inventoryList = inventoryList.subList(nextInventory(inventoryEnd, inventoryList.size), inventoryList.size)
     }
 
-    val mostCalories = calories.max()
-    return calories.indexOf(mostCalories) to mostCalories
+    return calories.maxOf { sumCaloriesOfNextElf(it) }
 }
 
 private fun inventoryFrom(input: String) = input.lines()
@@ -48,7 +47,7 @@ private fun inventoryFrom(input: String) = input.lines()
 private fun findInventoryEnd(inventoryList: List<String>) =
     inventoryList.indexOfFirst { it.isBlank() }.coerceAtLeast(1)
 
-private fun sumCaloriesOfNextElf(calories: List<String>, inventoryEnd: Int) = calories.subList(0, inventoryEnd)
+private fun sumCaloriesOfNextElf(calories: List<String>) = calories
     .map { it.trim() }
     .filter { it.toIntOrNull() != null }
     .sumOf { it.toInt() }
