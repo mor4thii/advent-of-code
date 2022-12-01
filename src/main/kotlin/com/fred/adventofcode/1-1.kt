@@ -3,8 +3,7 @@ package com.fred.adventofcode
 import kotlin.math.min
 
 fun main() {
-    val foo = findElfCarryingMaximumCalories(
-        """6750
+    val input = """6750
 6538
 5292
 4635
@@ -2238,12 +2237,16 @@ fun main() {
 7397
 7163
 4460"""
+
+    val max = findElfCarryingMaximumCalories(
+        input, 3
     )
 
-    println(foo)
+    println(max.last())
+    println(max.sum())
 }
 
-private fun findElfCarryingMaximumCalories(input: String): Int {
+private fun findElfCarryingMaximumCalories(input: String, n: Int): List<Int> {
     var inventoryList = inventoryFrom(input)
     val calories = mutableListOf<List<String>>()
 
@@ -2253,7 +2256,8 @@ private fun findElfCarryingMaximumCalories(input: String): Int {
         inventoryList = inventoryList.subList(nextInventory(inventoryEnd, inventoryList.size), inventoryList.size)
     }
 
-    return calories.maxOf { sumCaloriesOfNextElf(it) }
+    //return calories.maxOf { sumCaloriesOfNextElf(it) }
+    return calories.map { sumCaloriesOfNextElf(it) }.sorted().takeLast(n)
 }
 
 private fun inventoryFrom(input: String) = input.lines()
