@@ -3,11 +3,23 @@ package com.fred.adventofcode
 enum class Shape(val value: Int) {
     ROCK(1), PAPER(2), SCISSORS(3);
 
-    fun playsAgainst(other: Shape) = when (this) {
+    fun outcomeAgainst(other: Shape) = when (this) {
         other -> 3
         ROCK -> if (other == SCISSORS) 6 else 0
         PAPER -> if (other == ROCK) 6 else 0
         SCISSORS -> if (other == PAPER) 6 else 0
+    }
+
+    fun losesAgainst() = when (this) {
+        ROCK -> PAPER
+        PAPER -> SCISSORS
+        SCISSORS -> ROCK
+    }
+
+    fun winsAgainst() = when(this) {
+        ROCK -> SCISSORS
+        PAPER -> ROCK
+        SCISSORS -> PAPER
     }
 
     companion object {
@@ -20,19 +32,46 @@ enum class Shape(val value: Int) {
     }
 }
 
+enum class Outcome {
+    LOSE, DRAW, WIN;
+
+    fun against(shape: Shape) = when (this) {
+        DRAW -> shape
+        LOSE -> shape.winsAgainst()
+        WIN -> shape.losesAgainst()
+    }
+
+    companion object {
+        fun from(input: String) = when (input) {
+            "X" -> LOSE
+            "Y" -> DRAW
+            "Z" -> WIN
+            else -> throw IllegalArgumentException("Cannot convert $input into a outcome")
+        }
+    }
+}
+
 fun score(input: String) =
     roundsStrategy(input)
         .map { outcome(it) }
         .reduce { a, b -> a + b }
 
 // Input sanitation should happen here before naively applying this function
+// 2-1
+//private fun roundsStrategy(input: String) =
+//    input.lines()
+//        .map { it.split(" ") }
+//        .map { Shape.from(it.first()) to Shape.from(it.last()) }
+
+// 2-2
 private fun roundsStrategy(input: String) =
     input.lines()
         .map { it.split(" ") }
-        .map { Shape.from(it.first()) to Shape.from(it.last()) }
+        .map { Shape.from(it.first()) to Outcome.from(it.last()) }
+        .map { it.first to it.second.against(it.first) }
 
 private fun outcome(match: Pair<Shape, Shape>) =
-    match.second.value + match.second.playsAgainst(match.first)
+    match.second.value + match.second.outcomeAgainst(match.first)
 
 fun main() {
     val input = """B Y
