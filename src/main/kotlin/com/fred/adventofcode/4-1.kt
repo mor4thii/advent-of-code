@@ -1003,12 +1003,15 @@ fun main() {
 24-24,24-24
 81-95,96-99"""
 
-    val count = input.lines().asSequence().map { it.split(",").toPair() }
+    val count = input.lines()
+        .asSequence()
+        .map { it.split(",").toPair() }
         .map { it.first.split("-").toPair() to it.second.split("-").toPair() }
         .map {
             it.first.first.toInt()..it.first.second.toInt() to it.second.first.toInt()..it.second.second.toInt()
         }
-        .count { it.first contains it.second || it.second contains it.first }
+//        .count { it.first contains it.second || it.second contains it.first }
+        .count { it.first intersects it.second }
 
     print(count)
 }
@@ -1020,3 +1023,6 @@ fun List<String>.toPair(): Pair<String, String> {
 
 // 4-1
 infix fun IntRange.contains(other: IntRange) = min() <= other.min() && other.max() <= max()
+
+// 4-2
+infix fun IntRange.intersects(other: IntRange) = min() <= other.max() && other.min() <= max()
