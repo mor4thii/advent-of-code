@@ -21,11 +21,26 @@ private fun parseInstructions(input: List<String>) = input
     .map { it.split("  ") }
     .map { Triple(it[0].toInt(), it[1].toInt(), it[2].toInt()) }
 
+// 5-1
 private fun List<Stack<String>>.popCrates(
     it: Triple<Int, Int, Int>,
 ) {
     for (i in 1..it.first) {
         this[it.third - 1].push(this[it.second - 1].pop())
+    }
+}
+
+// 5-2
+private fun List<Stack<String>>.moveCrates(
+    it: Triple<Int, Int, Int>,
+) {
+    val foo = mutableListOf<String>()
+    for (i in 1..it.first) {
+        foo.add(this[it.second - 1].pop())
+    }
+    val reversed = foo.reversed()
+    for (i in 1..it.first) {
+        this[it.third - 1].push(reversed[i - 1])
     }
 }
 
@@ -554,7 +569,8 @@ move 4 from 3 to 4"""
         .filter { it.contains("move") }
         .let { parseInstructions(it) }
         .forEach {
-            stacks.popCrates(it)
+            // stacks.popCrates(it)
+            stacks.moveCrates(it)
         }
 
     val result = stacks.map { it.last() }.reduce { a, b -> a.plus(b) }
