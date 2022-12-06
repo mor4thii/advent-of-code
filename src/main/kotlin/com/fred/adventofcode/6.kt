@@ -11,4 +11,4 @@ private fun String.findMarker(length: Int) = this
     .windowed(length)
     .indexOfFirst { it.individualCharsOnly(length) } + length
 
-fun String.individualCharsOnly(length: Int) = this.map { this.count { c -> c == it } }.sum() == length
+fun String.individualCharsOnly(length: Int) = this.groupBy { it }.size == length
