@@ -10,6 +10,4 @@ fun main() {
 
 private fun String.findMarker(length: Int) = this
     .windowed(length)
-    .indexOfFirst { it.individualCharsOnly(length) } + length
-
-fun String.individualCharsOnly(length: Int) = this.groupBy { it }.size == length
+    .indexOfFirst { window -> window.groupBy { it }.size == length } + length
