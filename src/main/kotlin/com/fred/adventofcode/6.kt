@@ -12,8 +12,7 @@ fun main() {
 private fun String.findMarker(length: Int) = this
     .windowed(length)
     .mapIndexed { a, b -> a + length to b }
-    .toMap()
-    .filter { it.value.foo(length) }
-    .firstNotNullOf { it.key }
+    .filter { it.second.foo(length) }
+    .firstNotNullOf { it.first }
 
 fun String.foo(length: Int) = this.map { this.count { c -> c == it } }.sum() == length
