@@ -1,8 +1,4 @@
-package com.fred.adventofcode
-
-
-fun main() {
-    val input = """14-28,13-28
+14-28,13-28
 72-81,82-91
 4-4,6-95
 47-49,48-59
@@ -1001,28 +997,4 @@ fun main() {
 6-96,5-96
 6-18,17-55
 24-24,24-24
-81-95,96-99"""
-
-    val count = input.lines()
-        .asSequence()
-        .map { it.split(",").toPair() }
-        .map { it.first.split("-").toPair() to it.second.split("-").toPair() }
-        .map {
-            it.first.first.toInt()..it.first.second.toInt() to it.second.first.toInt()..it.second.second.toInt()
-        }
-//        .count { it.first contains it.second || it.second contains it.first }
-        .count { it.first intersects it.second }
-
-    print(count)
-}
-
-fun List<String>.toPair(): Pair<String, String> {
-    require(size == 2)
-    return first() to last()
-}
-
-// 4-1
-infix fun IntRange.contains(other: IntRange) = min() <= other.min() && other.max() <= max()
-
-// 4-2
-infix fun IntRange.intersects(other: IntRange) = min() <= other.max() && other.min() <= max()
+81-95,96-99
