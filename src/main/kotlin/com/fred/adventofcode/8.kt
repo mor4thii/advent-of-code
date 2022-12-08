@@ -9,16 +9,14 @@ fun main() {
         .lines()
         .map { it.map(Char::digitToInt) }
 
-    // Input has same length in both dimensions, so keeping it simple here
-    val indices = input.indices
-
-    println(treesSeenFromTheOutside(indices, input))
+    println(treesSeenFromTheOutside(input))
+    println(viewingDistance(input))
 }
 
 private fun treesSeenFromTheOutside(
-    indices: IntRange,
     input: List<List<Int>>,
-): MutableSet<Pair<Int, Int>> {
+): Int {
+    val indices = input.indices
     val visible = mutableSetOf<Pair<Int, Int>>()
 
     for (i in indices) {
@@ -41,5 +39,38 @@ private fun treesSeenFromTheOutside(
             }
         }
     }
-    return visible
+
+    return visible.size
 }
+
+private fun viewingDistance(
+    input: List<List<Int>>,
+): Int {
+    val indices = input.indices
+    val vonNeumannNeighbors = listOf(1 to 0, 0 to 1, -1 to 0, 0 to -1)
+
+    var best = 0
+    for (y in indices) {
+        for (x in indices) {
+            var scenicValue = 1
+            for ((dy, dx) in vonNeumannNeighbors) {
+                var distance = 0
+                var ys = y + dy
+                var xs = x + dx
+                while (indices.twoDimensionallyContains(ys, xs)) {
+                    distance += 1
+                    if (input[ys][xs] >= input[y][x]) break
+                    ys += dy
+                    xs += dx
+                }
+                scenicValue *= distance
+            }
+            best = max(best, scenicValue)
+        }
+    }
+
+    return best
+}
+
+private fun IntRange.twoDimensionallyContains(ys: Int, xs: Int) =
+    this.contains(ys) && this.contains(xs)
